@@ -9,7 +9,7 @@
     <!--    <img src="res/sprites/001.png" width=576 height=576> -->
     <canvas id="pokemon" width=576 height=576></canvas>
 
-    <button id="grey" onclick="greyed = !greyed; loadPoke(currentPoke.number); ">Hide</button>
+    <button id="grey" onclick="greyed = !greyed; loadPoke(currentPoke.number); $(this).text(greyed ? 'Reveal' : 'Hide');">Hide</button>
 
     <script>
 var SPRITE_HEIGHT = 96,
