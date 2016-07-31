@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+    <script src="js/vendor/jquery-1.11.3.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+    <img src="res/sprites/001.png" width=576 height=576>
+
+    <script>
+var pickRandom = arr => arr[Math.floor(Math.random() * arr.length)];
+
+var makeSrc = function (s) {
+    s += '';
+
+    var pad = '000',
+        padded = pad.substring(0, pad.length - s.length) + s;
+        
+    return 'res/sprites/' + padded + '.png';
+};
+
+$.getJSON('res/names.json', function (pokemon) {
+    console.log(pokemon);
+
+    var genOne = pokemon.filter(d => d.generation === 1);
+
+    console.log(genOne);
+    console.log(genOne.length);
+
+    var img = $('img');
+
+    img.click(function () {
+        var newPoke = pickRandom(genOne);
+
+        $(this).attr('src', makeSrc(newPoke.number));
+    });
+});
+    </script>
+</body>
