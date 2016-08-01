@@ -6,10 +6,21 @@
     </style>
 </head>
 <body>
-    <!--    <img src="res/sprites/001.png" width=576 height=576> -->
     <canvas id="pokemon" width=576 height=576></canvas>
 
+    <br>
     <button id="grey" onclick="greyed = !greyed; loadPoke(currentPoke.number); $(this).text(greyed ? 'Reveal' : 'Hide');">Hide</button>
+
+    <br>
+    <input type="checkbox" class="generation-checkbox" name="gen-1" value=1 checked>Generation 1 (1 - 151)
+    <br>
+    <input type="checkbox" class="generation-checkbox" name="gen-2" value=2>Generation 2 (151 - 251)
+    <br>
+    <input type="checkbox" class="generation-checkbox" name="gen-3" value=3>Generation 3 (251 - 386)
+    <br>
+    <input type="checkbox" class="generation-checkbox" name="gen-4" value=4>Generation 4 (387 - 493)
+    <br>
+    <input type="checkbox" class="generation-checkbox" name="gen-5" value=5>Generation 5 (494 - 649)
 
     <script>
 var SPRITE_HEIGHT = 96,
@@ -98,18 +109,30 @@ var newPoke = function (from) {
     loadPoke(currentPoke.number);
 };
 
+var filterGens = function (pokemon) {
+    var checkboxes = $('.generation-checkbox');
+
+    var filteredIn = [];
+    checkboxes.each(function () {
+        filteredIn.push(this.checked);
+    });
+
+    var filtered = pokemon.filter(d => filteredIn[d.generation - 1]);
+
+    return filtered;
+}
+
 $.getJSON('res/names.json', function (pokemon) {
-    console.log(pokemon);
-
-    var genOne = pokemon.filter(d => d.generation === 1);
-
-    console.log(genOne);
-    console.log(genOne.length);
+    var filteredPokemon = filterGens(pokemon);
 
     var canvas = $('canvas');
-    canvas.click(() => newPoke(genOne));
+    canvas.click(function () {
+        filteredPokemon = filterGens(pokemon);
 
-    newPoke(genOne);
+        if (filteredPokemon.length !== 0) newPoke(filteredPokemon);
+    });
+
+    newPoke(filteredPokemon);
 });
     </script>
 </body>
