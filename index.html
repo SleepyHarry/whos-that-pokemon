@@ -10,6 +10,9 @@
 
     <br>
     <button id="grey" onclick="greyed = !greyed; loadPoke(currentPoke.number); $(this).text(greyed ? 'Reveal' : 'Hide');">Hide</button>
+    <button id="normal" onclick="candied=false; drawPoke()">Normal</button>
+    <button id="candy" onclick="candied=true; drawCandy()">Candy</button>
+
 
     <br>
     <input type="checkbox" class="generation-checkbox" name="gen-1" value=1 checked>Generation 1 (1 - 151)

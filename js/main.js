@@ -1,7 +1,8 @@
 var SPRITE_HEIGHT = 96,
     ZOOM = 6;
 
-var greyed = false;
+var greyed = false,
+    candied = false;
 
 var currentPoke;
 
@@ -60,7 +61,7 @@ var loadPoke = function (number) {
         context.drawImage(pokeImg, 0, 0, SPRITE_HEIGHT, SPRITE_HEIGHT,
             0, 0, SPRITE_HEIGHT, SPRITE_HEIGHT);
         getSpriteData(canvas, context);
-        drawPoke();
+        if (candied) { drawCandy(); } else { drawPoke(); }
     };
 };
 
@@ -76,6 +77,50 @@ var drawPoke = function () {
             context.fillRect(i * ZOOM, j * ZOOM, ZOOM, ZOOM);
         }
     }
+};
+
+var drawCandy = function () {
+    var canvas = document.getElementById('pokemon');
+    var context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    var fillStyles = [],
+        colourTop = 0,
+        colourBottom = SPRITE_HEIGHT;
+    for (var j = 0; j < SPRITE_HEIGHT; j++) {
+        var modalColour = mode(spriteData.map(d => d[j]));
+        fillStyles.push(modalColour || 'rgba(0,0,0,0.0)');
+
+        if (modalColour !== undefined) {
+            colourTop = colourTop || j;
+            colourBottom = colourBottom && j;
+        }
+    }
+
+    for (var j = 0; j < SPRITE_HEIGHT; j++) {
+        context.fillStyle = fillStyles[j];
+
+        var w = Math.min(j - colourTop, colourBottom - j);
+        context.fillRect((SPRITE_HEIGHT - w) / 2 * ZOOM, j * ZOOM,  w * ZOOM, ZOOM);
+    }
+};
+
+// Adapted with love from http://codereview.stackexchange.com/a/68342
+var mode = function mode(arr) {
+    var mapping = {};
+    var greatestFreq = 0;
+    var mode;
+    arr.forEach(function findMode(x) {
+        if (x === null) return;
+
+        mapping[x] = (mapping[x] || 0) + 1;
+
+        if (greatestFreq < mapping[x]) {
+            greatestFreq = mapping[x];
+            mode = x;
+        }
+    });
+    return mode;
 };
 
 var newPoke = function (from) {
