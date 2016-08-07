@@ -89,7 +89,7 @@ var drawCandy = function () {
         colourBottom = SPRITE_HEIGHT;
     for (var j = 0; j < SPRITE_HEIGHT; j++) {
         var modalColour = mode(spriteData.map(d => d[j]));
-        fillStyles.push(modalColour || 'rgba(0,0,0,0.0)');
+        fillStyles.push(modalColour);
 
         if (modalColour !== undefined) {
             colourTop = colourTop || j;
@@ -97,11 +97,21 @@ var drawCandy = function () {
         }
     }
 
-    for (var j = 0; j < SPRITE_HEIGHT; j++) {
-        context.fillStyle = fillStyles[j];
+    var radius = (colourBottom - colourTop) / 2;
 
-        var w = Math.min(j - colourTop, colourBottom - j);
-        context.fillRect((SPRITE_HEIGHT - w) / 2 * ZOOM, j * ZOOM,  w * ZOOM, ZOOM);
+    for (var j = 0; j < SPRITE_HEIGHT; j++) {
+        if (fillStyles[j] === undefined) continue;
+
+        //var w = Math.min(j - colourTop, colourBottom - j),
+        var w = Math.floor(2 * radius * Math.cos(Math.asin(1 - Math.min(j - colourTop, colourBottom - j) / radius))),
+            x = (SPRITE_HEIGHT - w) / 2;
+
+        // basic border
+        //context.fillStyle = 'rgb(0,0,0)';
+        //context.fillRect(x * ZOOM - 1, j * ZOOM, w * ZOOM + 2, ZOOM + 1);
+
+        context.fillStyle = fillStyles[j] || 'rgba(0,0,0,0.0)';
+        context.fillRect(x * ZOOM, j * ZOOM,  w * ZOOM, ZOOM);
     }
 };
 
